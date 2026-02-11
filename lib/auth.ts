@@ -39,7 +39,7 @@ export const authOptions: NextAuthOptions = {
           username: user.username,
           department: user.department,
           position: user.position,
-          isAdmin: user.permissions?.isAdmin ?? false,
+          isAdmin: user.permissions[0]?.isAdmin ?? false,
         } as any;
       },
     }),

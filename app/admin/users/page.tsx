@@ -1,7 +1,7 @@
 import { requireAdmin } from "@/lib/session";
 import Header from "@/components/Header";
 import { prisma } from "@/lib/prisma";
-import Link from="next/link";
+import Link from "next/link";
 
 export default async function AdminUsersPage() {
   console.log("👥 Admin users page loading...");
@@ -53,7 +53,7 @@ export default async function AdminUsersPage() {
                     <td className="px-6 py-4 text-gray-600">{user.department || "-"}</td>
                     <td className="px-6 py-4 text-gray-600">{user.position || "-"}</td>
                     <td className="px-6 py-4 text-center">
-                      {user.permissions?.isAdmin ? (
+                      {user.permissions[0]?.isAdmin ? (
                         <span className="px-3 py-1 bg-red-100 text-red-800 rounded-lg text-sm font-semibold">
                           مدير
                         </span>

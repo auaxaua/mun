@@ -61,7 +61,7 @@ export async function POST(request: Request) {
     }
 
     // تحديد isAdmin - إذا كانت permissions موجودة ومفعلة
-    const isAdmin = user.permissions?.isAdmin === true;
+    const isAdmin = user.permissions[0]?.isAdmin === true;
     console.log("👑 Is Admin:", isAdmin);
 
     // تسجيل نشاط

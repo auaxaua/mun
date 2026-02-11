@@ -1,0 +1,47 @@
+# ═══════════════════════════════════════════════════════════
+# 🔧 إضافة متغيرات البيئة لمشروع MUN على Vercel
+# ═══════════════════════════════════════════════════════════
+
+# انسخ كل أمر وألصقه في PowerShell، ثم اضغط Enter
+# عندما يُطلب منك إدخال القيمة، الصقها من الأسفل
+
+# ────────────────────────────────────────────────────────────
+# 1️⃣ إضافة DATABASE_URL
+# ────────────────────────────────────────────────────────────
+vercel env add DATABASE_URL production --scope survivors-projects-0699042e
+
+# عندما يُطلب منك: What's the value of DATABASE_URL?
+# الصق هذا:
+postgresql://neondb_owner:npg_IQhy9CV7RUAg@ep-gentle-glade-agz7uoi2-pooler.c-2.eu-central-1.aws.neon.tech/neondb?sslmode=require
+
+
+# ────────────────────────────────────────────────────────────
+# 2️⃣ إضافة NEXTAUTH_SECRET
+# ────────────────────────────────────────────────────────────
+vercel env add NEXTAUTH_SECRET production --scope survivors-projects-0699042e
+
+# عندما يُطلب منك: What's the value of NEXTAUTH_SECRET?
+# الصق هذا:
+7DrXwzP7XyYFQeMMfrHVK8yjZ8XZnZa7GT4tCpC45dY=
+
+
+# ────────────────────────────────────────────────────────────
+# 3️⃣ إضافة NEXTAUTH_URL
+# ────────────────────────────────────────────────────────────
+vercel env add NEXTAUTH_URL production --scope survivors-projects-0699042e
+
+# عندما يُطلب منك: What's the value of NEXTAUTH_URL?
+# الصق هذا:
+https://mun.xcoxco.com
+
+
+# ────────────────────────────────────────────────────────────
+# 4️⃣ بعد إضافة جميع المتغيرات، أعد النشر:
+# ────────────────────────────────────────────────────────────
+cd "C:\Users\hp\Desktop\موقعي\MUN"
+vercel --prod --scope survivors-projects-0699042e --yes
+
+
+# ════════════════════════════════════════════════════════════
+# ✅ النتيجة المتوقعة: نشر ناجح بدون أخطاء
+# ════════════════════════════════════════════════════════════
