@@ -1,0 +1,261 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// نستخدم نفس جداول المستخدمين من المشروع الرئيسي
+// وننشئ جداول جديدة للأقسام الأربعة
+
+// === أقسام نظام MUN ===
+
+model MunUser {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  passwordHash String
+  name         String
+  email        String?  @unique
+  department   String?  // القسم الوظيفي
+  position     String?  // المسمى الوظيفي
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  permissions MunPermission[]
+  activities  MunActivity[]
+}
+
+model MunPermission {
+  id     String  @id @default(cuid())
+  userId String
+  
+  // الصلاحيات للأقسام الأربعة
+  competitions_view   Boolean @default(false)
+  competitions_edit   Boolean @default(false)
+  competitions_admin  Boolean @default(false)
+  
+  warranties_view     Boolean @default(false)
+  warranties_edit     Boolean @default(false)
+  warranties_admin    Boolean @default(false)
+  
+  contracts_view      Boolean @default(false)
+  contracts_edit      Boolean @default(false)
+  contracts_admin     Boolean @default(false)
+  
+  expenses_view       Boolean @default(false)
+  expenses_edit       Boolean @default(false)
+  expenses_admin      Boolean @default(false)
+  
+  // صلاحيات إدارية
+  isAdmin             Boolean @default(false)
+  
+  user MunUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId])
+}
+
+// قسم المنافسات
+model Competition {
+  id              String   @id @default(cuid())
+  referenceNumber String   @unique  // رقم المنافسة
+  title           String   // عنوان المنافسة
+  description     String?  // الوصف
+  type            String   // نوع المنافسة (عامة، محدودة، إلخ)
+  budget          Float?   // الميزانية التقديرية
+  department      String?  // الجهة الطالبة
+  
+  publishDate     DateTime?  // تاريخ النشر
+  closingDate     DateTime?  // تاريخ الإغلاق
+  awardDate       DateTime?  // تاريخ الترسية
+  
+  status          String   @default("draft")  // draft, published, closed, awarded, cancelled
+  winner          String?  // الفائز
+  winnerAmount    Float?   // مبلغ الترسية
+  
+  notes           String?
+  documents       String?  // JSON array of document URLs
+  
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([referenceNumber])
+  @@index([publishDate])
+}
+
+// قسم الضمانات
+model Warranty {
+  id              String   @id @default(cuid())
+  referenceNumber String   @unique  // رقم الضمان
+  type            String   // نوع الضمان (ابتدائي، نهائي، صيانة)
+  supplier        String   // المورد
+  amount          Float    // قيمة الضمان
+  currency        String   @default("SAR")
+  
+  issueDate       DateTime  // تاريخ الإصدار
+  expiryDate      DateTime  // تاريخ الانتهاء
+  extendedDate    DateTime? // تاريخ التمديد (إن وجد)
+  
+  bankName        String?   // البنك المصدر
+  guaranteeNumber String?   // رقم خطاب الضمان
+  
+  relatedContract String?   // العقد المرتبط
+  relatedProject  String?   // المشروع المرتبط
+  
+  status          String   @default("active")  // active, expired, returned, extended
+  returnDate      DateTime?  // تاريخ الاسترجاع
+  
+  notes           String?
+  documents       String?   // JSON array
+  
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([expiryDate])
+  @@index([supplier])
+}
+
+// قسم العقود
+model Contract {
+  id              String   @id @default(cuid())
+  referenceNumber String   @unique  // رقم العقد
+  title           String   // عنوان العقد
+  supplier        String   // المتعاقد
+  supplierCR      String?  // السجل التجاري
+  
+  type            String   // نوع العقد (توريد، خدمات، صيانة، إنشاءات)
+  amount          Float    // قيمة العقد
+  currency        String   @default("SAR")
+  
+  startDate       DateTime  // تاريخ البدء
+  endDate         DateTime  // تاريخ الانتهاء
+  duration        Int?      // المدة بالأيام
+  
+  relatedCompetition String?  // المنافسة المرتبطة
+  
+  paymentTerms    String?   // شروط الدفع
+  deliveryTerms   String?   // شروط التسليم
+  
+  status          String   @default("active")  // active, completed, cancelled, suspended
+  completionRate  Float    @default(0)  // نسبة الإنجاز
+  
+  notes           String?
+  documents       String?   // JSON array
+  
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  payments ContractPayment[]
+  
+  @@index([status])
+  @@index([supplier])
+  @@index([endDate])
+}
+
+// دفعات العقود
+model ContractPayment {
+  id          String   @id @default(cuid())
+  contractId  String
+  
+  paymentNumber Int      // رقم الدفعة
+  amount        Float    // المبلغ
+  description   String?  // الوصف
+  
+  dueDate       DateTime?  // تاريخ الاستحقاق
+  paidDate      DateTime?  // تاريخ الصرف
+  
+  status        String   @default("pending")  // pending, paid, cancelled
+  
+  invoiceNumber String?  // رقم الفاتورة
+  paymentMethod String?  // طريقة الدفع
+  
+  notes         String?
+  documents     String?  // JSON array
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  contract Contract @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  
+  @@index([contractId])
+  @@index([status])
+}
+
+// قسم الصرف
+model Expense {
+  id              String   @id @default(cuid())
+  referenceNumber String   @unique  // رقم أمر الصرف
+  title           String   // عنوان الصرف
+  category        String   // الفئة (تشغيلية، رأسمالية، إلخ)
+  
+  beneficiary     String   // المستفيد
+  beneficiaryID   String?  // رقم الهوية/السجل
+  
+  amount          Float    // المبلغ
+  currency        String   @default("SAR")
+  
+  requestDate     DateTime  // تاريخ الطلب
+  approvalDate    DateTime? // تاريخ الاعتماد
+  paymentDate     DateTime? // تاريخ الصرف
+  
+  department      String?   // الجهة الطالبة
+  project         String?   // المشروع المرتبط
+  costCenter      String?   // مركز التكلفة
+  
+  paymentMethod   String?   // طريقة الصرف (تحويل، شيك)
+  bankAccount     String?   // رقم الحساب
+  
+  status          String   @default("pending")  // pending, approved, paid, rejected, cancelled
+  
+  approvedBy      String?   // من اعتمد
+  paidBy          String?   // من صرف
+  
+  notes           String?
+  documents       String?   // JSON array
+  
+  createdBy       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([status])
+  @@index([category])
+  @@index([requestDate])
+}
+
+// سجل النشاطات
+model MunActivity {
+  id        String   @id @default(cuid())
+  userId    String?
+  username  String?
+  action    String   // login, logout, create, update, delete
+  entity    String?  // competition, warranty, contract, expense
+  entityId  String?
+  details   String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  user MunUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// النسخ الاحتياطية
+model MunBackup {
+  id           String   @id @default(cuid())
+  section      String   // competitions, warranties, contracts, expenses, all
+  filename     String
+  size         Int?
+  createdBy    String?
+  createdAt    DateTime @default(now())
+  
+  @@index([section])
+  @@index([createdAt])
+}

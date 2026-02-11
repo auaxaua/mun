@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار التنقل - MUN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .test-section h2 {
+            color: #495057;
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .links {
+            display: grid;
+            gap: 12px;
+        }
+        
+        .link-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .link-item:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: translateX(-5px);
+        }
+        
+        .link-icon {
+            font-size: 24px;
+        }
+        
+        .link-arrow {
+            color: #adb5bd;
+            transition: all 0.3s;
+        }
+        
+        .link-item:hover .link-arrow {
+            color: #667eea;
+            transform: translateX(-5px);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .status.running {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.stopped {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .instructions {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .instructions ol {
+            padding-right: 20px;
+            color: #856404;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 اختبار التنقل - MUN</h1>
+        <p class="subtitle">تحقق من عمل جميع الروابط والصفحات</p>
+        
+        <div id="server-status"></div>
+        
+        <div class="test-section">
+            <h2>🏠 الصفحات الرئيسية</h2>
+            <div class="links">
+                <a href="http://localhost:3001/login" class="link-item" target="_blank">
+                    <span><span class="link-icon">🔐</span> صفحة تسجيل الدخول</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/dashboard" class="link-item" target="_blank">
+                    <span><span class="link-icon">🏠</span> لوحة التحكم (Dashboard)</span>
+                    <span class="link-arrow">←</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>📁 الأقسام الأربعة</h2>
+            <div class="links">
+                <a href="http://localhost:3001/competitions" class="link-item" target="_blank">
+                    <span><span class="link-icon">🏆</span> المنافسات</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/warranties" class="link-item" target="_blank">
+                    <span><span class="link-icon">🛡️</span> الضمانات</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/contracts" class="link-item" target="_blank">
+                    <span><span class="link-icon">📄</span> العقود</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/expenses" class="link-item" target="_blank">
+                    <span><span class="link-icon">💰</span> الصرف</span>
+                    <span class="link-arrow">←</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>⚙️ لوحة الإدارة (Admin فقط)</h2>
+            <div class="links">
+                <a href="http://localhost:3001/admin" class="link-item" target="_blank">
+                    <span><span class="link-icon">⚙️</span> لوحة الإدارة</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/admin/users" class="link-item" target="_blank">
+                    <span><span class="link-icon">👥</span> إدارة المستخدمين</span>
+                    <span class="link-arrow">←</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>🔧 اختبارات API</h2>
+            <div class="links">
+                <a href="http://localhost:3001/api/test" class="link-item" target="_blank">
+                    <span><span class="link-icon">🧪</span> اختبار API</span>
+                    <span class="link-arrow">←</span>
+                </a>
+                <a href="http://localhost:3001/test-login" class="link-item" target="_blank">
+                    <span><span class="link-icon">🔐</span> صفحة اختبار تسجيل الدخول</span>
+                    <span class="link-arrow">←</span>
+                </a>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 تعليمات الاختبار:</h3>
+            <ol>
+                <li><strong>تأكد أن الموقع يعمل:</strong> شغّل <code>4-run.bat</code> إذا لم يكن يعمل</li>
+                <li><strong>سجّل دخول أولاً:</strong> افتح صفحة تسجيل الدخول</li>
+                <li><strong>جرّب كل رابط:</strong> اضغط على كل رابط للتحقق من عمله</li>
+                <li><strong>افتح F12:</strong> راقب Console للأخطاء</li>
+                <li><strong>أبلغني:</strong> أي رابط لا يعمل؟</li>
+            </ol>
+        </div>
+    </div>
+    
+    <script>
+        // Check if server is running
+        fetch('http://localhost:3001/api/test')
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('server-status').innerHTML = 
+                        '<span class="status running">✅ الخادم يعمل على http://localhost:3001</span>';
+                }
+            })
+            .catch(() => {
+                document.getElementById('server-status').innerHTML = 
+                    '<span class="status stopped">❌ الخادم لا يعمل - شغّل 4-run.bat</span>';
+            });
+    </script>
+</body>
+</html>
