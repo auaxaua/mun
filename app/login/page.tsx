@@ -190,7 +190,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="mt-8 text-center text-sm text-gray-600 animate-fade-in">
-          <p>© 2026 جامعة شقراء - جميع الحقوق محفوظة</p>
+          <p>جميع الحقوق محفوظة - ادارة المنافسات والمشتريات</p>
         </div>
       </div>
     </div>

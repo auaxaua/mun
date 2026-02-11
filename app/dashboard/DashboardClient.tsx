@@ -63,7 +63,7 @@ export default function DashboardClient({ session }: DashboardClientProps) {
       icon: "🏆",
       color: "from-blue-500 to-blue-600",
       count: stats.competitions,
-      href: "/competitions",
+      href: "/dashboard/competitions",
     },
     {
       key: "warranties",
@@ -71,7 +71,7 @@ export default function DashboardClient({ session }: DashboardClientProps) {
       icon: "🛡️",
       color: "from-green-500 to-green-600",
       count: stats.warranties,
-      href: "/warranties",
+      href: "/dashboard/warranties",
     },
     {
       key: "contracts",
@@ -79,7 +79,7 @@ export default function DashboardClient({ session }: DashboardClientProps) {
       icon: "📄",
       color: "from-purple-500 to-purple-600",
       count: stats.contracts,
-      href: "/contracts",
+      href: "/dashboard/contracts",
     },
     {
       key: "expenses",
@@ -87,7 +87,7 @@ export default function DashboardClient({ session }: DashboardClientProps) {
       icon: "💰",
       color: "from-orange-500 to-orange-600",
       count: stats.expenses,
-      href: "/expenses",
+      href: "/dashboard/expenses",
     },
   ];
 

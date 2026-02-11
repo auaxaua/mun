@@ -24,8 +24,9 @@ model MunUser {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  permissions MunPermission[]
-  activities  MunActivity[]
+  permissions          MunPermission[]
+  activities           MunActivity[]
+  passwordResetTokens  PasswordResetToken[]
 }
 
 model MunPermission {
@@ -258,4 +259,20 @@ model MunBackup {
   
   @@index([section])
   @@index([createdAt])
+}
+
+// رموز إعادة تعيين كلمة المرور
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  
+  user MunUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([token])
+  @@index([userId])
+  @@index([expires])
 }
