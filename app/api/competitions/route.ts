@@ -76,15 +76,15 @@ export async function POST(req: NextRequest) {
         publishDate: publishDate ? new Date(publishDate) : null,
         closingDate: closingDate ? new Date(closingDate) : null,
         status: status || "draft",
-        createdBy: session.user.name || session.user.username,
+        createdBy: (session.user as any).username || session.user.name,
       },
     });
 
     // تسجيل النشاط
     await prisma.munActivity.create({
       data: {
-        userId: session.user.id,
-        username: session.user.name || session.user.username,
+        userId: (session.user as any).id,
+        username: (session.user as any).username || session.user.name,
         action: "create",
         entity: "competition",
         entityId: competition.id,

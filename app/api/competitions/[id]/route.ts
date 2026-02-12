@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 // GET - جلب منافسة واحدة
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,8 +14,10 @@ export async function GET(
       return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
     }
 
+    const { id } = await params;
+
     const competition = await prisma.competition.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!competition) {
@@ -38,7 +40,7 @@ export async function GET(
 // PUT - تحديث منافسة
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -46,12 +48,13 @@ export async function PUT(
       return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
     }
 
+    const { id } = await params;
     const body = await req.json();
     const { referenceNumber, title, type, publishDate, closingDate, status, description } = body;
 
     // التحقق من وجود المنافسة
     const existing = await prisma.competition.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -77,7 +80,7 @@ export async function PUT(
 
     // تحديث المنافسة
     const competition = await prisma.competition.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         referenceNumber,
         title,
@@ -92,8 +95,8 @@ export async function PUT(
     // تسجيل النشاط
     await prisma.munActivity.create({
       data: {
-        userId: session.user.id,
-        username: session.user.name || session.user.username,
+        userId: (session.user as any).id,
+        username: (session.user as any).username || session.user.name,
         action: "update",
         entity: "competition",
         entityId: competition.id,
@@ -114,7 +117,7 @@ export async function PUT(
 // DELETE - حذف منافسة
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -122,9 +125,11 @@ export async function DELETE(
       return NextResponse.json({ error: "غير مصرح" }, { status: 401 });
     }
 
+    const { id } = await params;
+
     // التحقق من وجود المنافسة
     const existing = await prisma.competition.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!existing) {
@@ -136,17 +141,17 @@ export async function DELETE(
 
     // حذف المنافسة
     await prisma.competition.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     // تسجيل النشاط
     await prisma.munActivity.create({
       data: {
-        userId: session.user.id,
-        username: session.user.name || session.user.username,
+        userId: (session.user as any).id,
+        username: (session.user as any).username || session.user.name,
         action: "delete",
         entity: "competition",
-        entityId: params.id,
+        entityId: id,
         details: `حذف منافسة: ${existing.referenceNumber}`,
       },
     });
